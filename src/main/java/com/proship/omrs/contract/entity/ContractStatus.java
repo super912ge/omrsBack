@@ -11,7 +11,9 @@ import javax.persistence.Table;
 import javax.persistence.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.proship.omrs.base.entity.BaseEntity;
+import com.proship.omrs.jsonviews.UserSerializer;
 import com.proship.omrs.user.entity.User;
 import lombok.Data;
 
@@ -29,6 +31,7 @@ public class ContractStatus extends BaseEntity{
 	private Long id;
 	
 	@ManyToOne(cascade= CascadeType.DETACH)
+	  @JsonSerialize(using = UserSerializer.class)
 	private User creator;
 	
 	@ManyToOne(cascade= CascadeType.DETACH)
@@ -45,7 +48,7 @@ public class ContractStatus extends BaseEntity{
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
 	public User getCreator() {
 		return creator;
 	}

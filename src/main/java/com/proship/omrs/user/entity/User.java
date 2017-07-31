@@ -6,10 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.springframework.stereotype.Component;
+
 import javax.persistence.AccessType;
 
 @Entity
-
+@Component
 @Access(AccessType.FIELD)
 @Table(name = "system_user")
 public class User {

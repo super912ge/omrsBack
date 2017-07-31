@@ -7,11 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.proship.omrs.base.entity.BaseEntity;
+import com.proship.omrs.jsonviews.UserSerializer;
 import com.proship.omrs.user.entity.User;
 
 import lombok.Data;
@@ -29,7 +31,7 @@ public class ContractShard extends BaseEntity{
 	
 	
 	@JsonIgnore
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="contract_id")
 	Contract contract;
 	
@@ -39,12 +41,16 @@ public class ContractShard extends BaseEntity{
 	  
 	  @ManyToOne(cascade = CascadeType.DETACH)
 	  @JoinColumn(name="creator_id")
+	  @JsonSerialize(using = UserSerializer.class)
 	  User creator;
 	  
+	  @JsonFormat(pattern="yyyy-MM-dd")
 	  Timestamp validstarttime;
+	  @JsonFormat(pattern="yyyy-MM-dd")
 	  Timestamp validendtime;
 
-	  Long pay_id;
+
+	Long pay_id;
 
 
 	public Long getId() {
@@ -113,6 +119,7 @@ public class ContractShard extends BaseEntity{
 
 
 	public void setValidstarttime(Timestamp validstarttime) {
+
 		this.validstarttime = validstarttime;
 	}
 
@@ -135,6 +142,12 @@ public class ContractShard extends BaseEntity{
 	public void setPay_id(Long pay_id) {
 		this.pay_id = pay_id;
 	}
-	
+
+	  @Override
+	public String toString() {
+		return "ContractShard [id=" + id + ", act=" + act + ", position=" + position + ", gig_id=" + gig_id
+				+ ", creator=" + creator + ", validstarttime=" + validstarttime + ", validendtime=" + validendtime
+				+ ", pay_id=" + pay_id + "]";
+	}
 	
 }

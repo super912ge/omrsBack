@@ -1,10 +1,10 @@
 package com.proship.omrs.base.entity;
 
 import java.sql.Timestamp;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,9 +14,10 @@ import lombok.Setter;
 @Setter
 public abstract class BaseEntity {
 
-	
+	@JsonIgnore
 	private Timestamp transactiontime;
 	
+	@JsonIgnore
 	private Timestamp nexttransactiontime;
 
 	public Timestamp getTransactiontime() {
