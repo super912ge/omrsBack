@@ -1,13 +1,20 @@
 package com.proship.omrs.user.entity;
 
+import java.util.List;
+
 import javax.persistence.Access;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.proship.omrs.todoList.entity.TodoList;
 
 import javax.persistence.AccessType;
 
@@ -33,8 +40,15 @@ public class User {
 	private String full_name;
 	private Long evaluation_role_id;
 	private Boolean requisition_mail_recipient;
-	
-	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<TodoList> todoList;
+	public List<TodoList> getTodoList() {
+		return todoList;
+	}
+	public void setTodoList(List<TodoList> todoList) {
+		this.todoList = todoList;
+	}
 	User(){};
 	public Long getId() {
 		return id;

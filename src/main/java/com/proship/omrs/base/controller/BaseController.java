@@ -36,11 +36,13 @@ public abstract class BaseController<T, ID extends Serializable> {
 	        return new ResponseEntity<List<T>>(Lists.newArrayList(all),HttpStatus.OK);
 	    }
 
-	    @RequestMapping(method=RequestMethod.POST)
+	    @RequestMapping(value="create",method=RequestMethod.POST,consumes="application/json")
 	    public ResponseEntity<Map<String, Object>> create(@RequestBody T json) {
 	    //    Log.debug("create() with body {} of type {}", json, json.getClass());
 
 	        T created = this.repo.save(json);
+	        
+	        
 
 	        Map<String, Object> m = Maps.newHashMap();
 	        m.put("success", true);
