@@ -49,7 +49,7 @@ public class User {
 	public void setTodoList(List<TodoList> todoList) {
 		this.todoList = todoList;
 	}
-	User(){};
+	public User(){};
 	public Long getId() {
 		return id;
 	}
