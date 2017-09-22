@@ -11,8 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.proship.omrs.jsonviews.UserSerializer;
 import com.proship.omrs.user.entity.User;
@@ -28,16 +30,20 @@ public class TodoList {
 			sequenceName="to_do_list_id_sequence"
 		)
 	Long id;
-	
+
+	@NotNull
 	String text;
+
 	@Column(insertable = false)
 	Boolean done;
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name="user_id")
-	@JsonSerialize(using = UserSerializer.class)
+	@JsonIgnore
+	//@JsonSerialize(using = UserSerializer.class)
 	User user;
-	
+
+	@NotNull
 	Long priorityId;
 	
 	@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
@@ -46,6 +52,7 @@ public class TodoList {
 	@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
 	@Column(insertable = false)
 	Timestamp createDate;
+
 	@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
 	Timestamp modificationDate;
 

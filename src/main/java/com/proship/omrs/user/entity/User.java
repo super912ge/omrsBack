@@ -1,22 +1,17 @@
 package com.proship.omrs.user.entity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.persistence.Access;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.proship.omrs.role.entity.RoleMap;
+import com.proship.omrs.role.entity.UserRole;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.proship.omrs.todoList.entity.TodoList;
-
-import javax.persistence.AccessType;
 
 @Entity
 @Component
@@ -25,11 +20,18 @@ import javax.persistence.AccessType;
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator="user_id_seq")
+    @SequenceGenerator(
+            name="user_id_seq",
+            sequenceName="user_id_sequence"
+    )
 	private Long id;
 	
 	private String name;
-	private String short_name; 
+	private String short_name;
+
+	private String password;
+
 	private String password_salt;
 	private String password_hash;
 	private String email;
@@ -39,22 +41,35 @@ public class User {
 	private String extension;
 	private String full_name;
 	private Long evaluation_role_id;
+
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "userId")
+	private List<UserRole> userRoleList;
+
 	private Boolean requisition_mail_recipient;
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<TodoList> todoList;
-	public List<TodoList> getTodoList() {
-		return todoList;
-	}
-	public void setTodoList(List<TodoList> todoList) {
-		this.todoList = todoList;
-	}
+
+	@Transient
+	private List<String> roleList = new ArrayList<>();
+
+
 	public User(){};
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public String getName() {
 		return name;
@@ -128,6 +143,43 @@ public class User {
 	public void setRequisition_mail_recipient(Boolean requisition_mail_recipient) {
 		this.requisition_mail_recipient = requisition_mail_recipient;
 	}
-	
-	
+
+    public List<UserRole> getUserRoleList() {
+        return userRoleList;
+    }
+
+    public void setUserRoleList(List<UserRole> userRoleList) {
+        this.userRoleList = userRoleList;
+    }
+
+    public List<TodoList> getTodoList() {
+        return todoList;
+    }
+
+    public void setTodoList(List<TodoList> todoList) {
+        this.todoList = todoList;
+    }
+
+    public List<String> getRoleList() {
+
+	   this.roleList = new ArrayList<>();
+
+	   if (this.userRoleList!=null && !this.userRoleList.isEmpty())
+
+       for(UserRole ur : this.userRoleList){
+           String role = RoleMap.getRoleType(ur.getRoleId());
+           roleList.add(role);
+       }
+
+	    return roleList;
+	}
+
+	public void setRoleList(List<String> roleList) {
+
+
+	    this.roleList = roleList;
+
+	    setUserRoleList(roleList.stream().map(role -> new UserRole(
+                this.id,RoleMap.getRoleId(role))).collect(Collectors.toList()));
+	}
 }

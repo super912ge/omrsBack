@@ -59,13 +59,14 @@ public abstract class BaseController<T, ID extends Serializable> {
 	    }
 
 	    @SuppressWarnings("deprecation")
-		@RequestMapping(value="/{id}", method=RequestMethod.POST)
+		@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	    public ResponseEntity<Map<String, Object>>  update(@PathVariable ID id, @RequestBody T json) {
 	        //logger.debug("update() of id#{} with body {}", id, json);
 	       // logger.debug("T json is of type {}", json.getClass());
 
 	        T entity = this.repo.findOne(id);
 	        try {
+
 	            BeanUtils.copyProperties(entity, json);
 	        }
 	        catch (Exception e) {
